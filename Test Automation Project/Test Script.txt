@@ -1,0 +1,63 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+import time
+
+# Set up Chrome options
+chrome_options = Options()
+chrome_options.add_argument("--start-maximized")  # Open browser in maximized mode
+chrome_options.add_argument("--disable-infobars")  # Disables info bars
+chrome_options.add_argument("--disable-extensions")  # Disables extensions
+
+# Path to your ChromeDriver
+chrome_driver_path = '/path/to/chromedriver'
+
+# Initialize WebDriver
+driver = webdriver.Chrome(service=Service(chrome_driver_path), options=chrome_options)
+
+# Open OpenCart website
+driver.get("https://www.opencart.com")
+
+# Example 1: Logging in
+def login(username, password):
+    driver.find_element(By.LINK_TEXT, "Login").click()
+    time.sleep(2)  # Wait for the login page to load
+
+    driver.find_element(By.NAME, "email").send_keys(username)
+    driver.find_element(By.NAME, "password").send_keys(password)
+    driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+    time.sleep(2)  # Wait for login to complete
+
+# Example 2: Navigating to Extensions section
+def navigate_to_extensions():
+    driver.find_element(By.LINK_TEXT, "Marketplace").click()
+    time.sleep(2)  # Wait for the marketplace page to load
+    driver.find_element(By.LINK_TEXT, "Extensions").click()
+    time.sleep(2)  # Wait for extensions page to load
+
+# Example 3: Searching for an extension
+def search_extension(extension_name):
+    search_box = driver.find_element(By.NAME, "filter_name")
+    search_box.send_keys(extension_name)
+    search_box.send_keys(Keys.RETURN)
+    time.sleep(2)  # Wait for search results to load
+
+# Example 4: Log out
+def logout():
+    driver.find_element(By.LINK_TEXT, "Logout").click()
+    time.sleep(2)  # Wait for logout to complete
+
+# Main automation flow
+if __name__ == "__main__":
+    username = "your-email@example.com"
+    password = "your-password"
+
+    login(username, password)
+    navigate_to_extensions()
+    search_extension("SEO Pack")
+    logout()
+
+    # Close the browser
+    driver.quit()
